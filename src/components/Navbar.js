@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -10,10 +11,7 @@ export default function Navbar() {
           
           {/* Left: Logo + Text */}
           <div className="brand">
-            <img
-              src="/companylogo.png"
-              alt="Anti Land Mafia"
-            />
+            <img src="/companylogo.png" alt="Anti Land Mafia" />
             <div className="brand-text">
               <h3>Anti Land Mafia</h3>
               <p>Justice for Land Rights</p>
@@ -22,11 +20,11 @@ export default function Navbar() {
 
           {/* Center: Links */}
           <ul className={`menu ${open ? "open" : ""}`}>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/resource" className="active">Resources</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/blog">Blog</Link></li>
+            <li><Link to="/resource" className="active">Resources</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
 
             {/* Mobile only button */}
             <li className="mobile-only">
@@ -74,19 +72,18 @@ export default function Navbar() {
           justify-content: space-between;
         }
 
-        /* Brand */
         .brand {
           display: flex;
           align-items: center;
           gap: 12px;
         }
-.brand img {
-  width: 75px;        /* adjust as needed */
-  height: 75px;
-  object-fit: cover; /* keeps aspect ratio */
-  border-radius: 50%;
-}
 
+        .brand img {
+          width: 75px;
+          height: 75px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
 
         .brand-text h3 {
           color: #3b4a1f;
@@ -98,7 +95,6 @@ export default function Navbar() {
           color: #7a7a7a;
         }
 
-        /* Menu */
         .menu {
           list-style: none;
           display: flex;
@@ -119,7 +115,6 @@ export default function Navbar() {
           color: #6b7d2c;
         }
 
-        /* Right section */
         .right {
           display: flex;
           align-items: center;
@@ -145,7 +140,6 @@ export default function Navbar() {
           background: #55621f;
         }
 
-        /* Hamburger */
         .hamburger {
           display: none;
           flex-direction: column;
@@ -163,7 +157,6 @@ export default function Navbar() {
           display: none;
         }
 
-        /* Mobile */
         @media (max-width: 900px) {
           .menu {
             position: absolute;
@@ -176,12 +169,6 @@ export default function Navbar() {
             padding: 20px 0;
             display: none;
           }
-@media (max-width: 900px) {
-  .brand img {
-    width: 40px;
-    height: 40px;
-  }
-}
 
           .menu.open {
             display: flex;
@@ -197,6 +184,11 @@ export default function Navbar() {
 
           .mobile-only {
             display: block;
+          }
+
+          .brand img {
+            width: 40px;
+            height: 40px;
           }
         }
       `}</style>
