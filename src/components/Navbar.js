@@ -4,6 +4,11 @@ import { Link } from "react-router-dom";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
+  // ✅ close menu on link click (mobile)
+  const handleLinkClick = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -20,24 +25,42 @@ export default function Navbar() {
 
           {/* Center: Links */}
           <ul className={`menu ${open ? "open" : ""}`}>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/blog">Blog</Link></li>
-            <li><Link to="/resource" className="active">Resources</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
+            <li>
+              <Link to="/" onClick={handleLinkClick}>Home</Link>
+            </li>
+            <li>
+              <Link to="/about" onClick={handleLinkClick}>About</Link>
+            </li>
+            <li>
+              <Link to="/blog" onClick={handleLinkClick}>Blog</Link>
+            </li>
+            <li>
+              <Link to="/resource" onClick={handleLinkClick}>Resources</Link>
+            </li>
+            <li>
+              <Link to="/contact" onClick={handleLinkClick}>Contact</Link>
+            </li>
 
             {/* Mobile only button */}
             <li className="mobile-only">
-              <button className="help-btn">Get Help</button>
+              <button
+                className="help-btn"
+                onClick={handleLinkClick}
+              >
+                Get Help
+              </button>
             </li>
           </ul>
 
-          {/* Right: Search + Button */}
+          {/* Right */}
           <div className="right">
             <span className="search">🔍</span>
             <button className="help-btn desktop-only">Get Help</button>
 
-            <div className="hamburger" onClick={() => setOpen(!open)}>
+            <div
+              className="hamburger"
+              onClick={() => setOpen(!open)}
+            >
               <span></span>
               <span></span>
               <span></span>
@@ -45,6 +68,9 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+     
+
 
       {/* CSS */}
       <style>{`
