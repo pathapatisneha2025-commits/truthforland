@@ -28,7 +28,7 @@ export default function App() {
           element={
             <>
              <HeroSection/>
-             <AboutSection/>
+             {/* <AboutSection/> */}
              <BlogSection/>
              <ResourcesSection/>
              <Contact/>
