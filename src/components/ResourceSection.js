@@ -1,224 +1,175 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-// --- Styles ---
-const styles = {
-  container: {
-    padding: '60px 5%',
-    backgroundColor: '#f9f8f3',
-    fontFamily: "'Inter', sans-serif",
-    minHeight: '100vh',
-  },
-  headerContent: {
-    maxWidth: '1200px',
-    margin: '0 auto 40px auto',
-  },
-  freeBadge: {
-    backgroundColor: '#4a5d23',
-    color: 'white',
-    padding: '6px 14px',
-    borderRadius: '20px',
-    fontSize: '13px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginBottom: '20px',
-  },
-  titleRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
-    gap: '20px',
-  },
-  mainTitle: {
-    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-    color: '#333',
-    margin: '0',
-    fontFamily: 'serif',
-    fontWeight: '700',
-  },
-  subtitle: {
-    color: '#666',
-    fontSize: '1.1rem',
-    marginTop: '15px',
-    maxWidth: '600px',
-  },
-  viewAllBtn: {
-    backgroundColor: '#947a32',
-    color: 'white',
-    border: 'none',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-    gap: '24px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-  },
-  card: {
-    backgroundColor: 'white',
-    border: '1px solid #e5e7eb',
-    borderRadius: '16px',
-    padding: '24px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    transition: 'box-shadow 0.3s ease',
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    marginBottom: '16px',
-  },
-  iconBox: {
-    backgroundColor: '#fff1f1',
-    color: '#d32f2f',
-    padding: '8px',
-    borderRadius: '8px',
-    fontSize: '20px',
-  },
-  typeTag: {
-    backgroundColor: '#f3f4f6',
-    color: '#6b7280',
-    padding: '2px 10px',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontWeight: '500',
-  },
-  cardTitle: {
-    fontSize: '1.25rem',
-    color: '#1f2937',
-    margin: '0 0 10px 0',
-    lineHeight: '1.4',
-  },
-  cardDesc: {
-    color: '#6b7280',
-    fontSize: '0.95rem',
-    lineHeight: '1.5',
-    marginBottom: '24px',
-  },
-  cardFooter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 'auto',
-  },
-  fileInfo: {
-    fontSize: '12px',
-    color: '#9ca3af',
-  },
-  btnGroup: {
-    display: 'flex',
-    gap: '8px',
-  },
-  actionBtn: {
-    padding: '8px 14px',
-    borderRadius: '6px',
-    fontSize: '13px',
-    fontWeight: '500',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    border: '1px solid #4a5d23',
-    backgroundColor: 'white',
-    color: '#4a5d23',
-  },
-  downloadBtn: {
-    backgroundColor: '#f0f4ee',
-    border: '1px solid #4a5d23',
-    color: '#4a5d23',
-  }
+const ResourcesPage = () => {
+    const [resources, setResources] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [viewUrl, setViewUrl] = useState(null); // PDF URL to view
+
+    const BACKEND_URL = "https://truthforlanddatabase.onrender.com";
+
+    // ================= FETCH RESOURCES =================
+    useEffect(() => {
+        const fetchResources = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/resources/all`);
+                if (!response.ok) throw new Error("Network response was not ok");
+                const data = await response.json();
+                setResources(data);
+            } catch (error) {
+                console.error("Error fetching resources:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchResources();
+    }, []);
+
+    // ================= VIEW FILE =================
+    const viewFile = (url) => {
+        if (!url) return alert("File URL not found");
+        setViewUrl(url); // Show PDF inline
+    };
+    const closeView = () => setViewUrl(null);
+
+    // ================= DOWNLOAD FILE =================
+    const downloadFile = async (url, filename = "document.pdf") => {
+        if (!url) return alert("File URL not found");
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const blob = await response.blob();
+            const fileURL = window.URL.createObjectURL(blob);
+
+            const name = filename.toLowerCase().endsWith(".pdf")
+                ? filename
+                : `${filename}.pdf`;
+
+            const link = document.createElement("a");
+            link.href = fileURL;
+            link.download = name;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(fileURL);
+        } catch (error) {
+            console.error("Error downloading file:", error);
+            alert("Failed to download file");
+        }
+    };
+
+    if (loading) return <p style={{ padding: 40 }}>Loading resources...</p>;
+
+    // ================= UI =================
+    return (
+        <div style={{ backgroundColor: "#F9F8F3", padding: "80px 5%", minHeight: "100vh", fontFamily: "'Inter', system-ui, sans-serif" }}>
+            <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+                <div style={{ backgroundColor: "#4B5E26", color: "#fff", padding: "6px 16px", borderRadius: 20, marginBottom: 24, display: "inline-flex", gap: 8 }}>
+                    📄 Free Resources
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", marginBottom: 10 }}>
+                    <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontFamily: "'Playfair Display', serif" }}>
+                        Legal Resources & Documents
+                    </h1>
+                </div>
+
+                <p style={{ color: "#666", margin: "10px 0 50px" }}>
+                    Download free legal guides, templates, and documents.
+                </p>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+                    {resources.map((item) => (
+                        <div key={item.id} style={{ backgroundColor: "#fff", borderRadius: 16, padding: 30, border: "1px solid #E5E7EB", display: "flex", flexDirection: "column" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                                <div style={{ backgroundColor: "#FFF1F1", padding: 10, borderRadius: 10 }}>📄</div>
+                                <strong>{item.type}</strong>
+                            </div>
+
+                            <h3>{item.title}</h3>
+                            <p>{item.description}</p>
+
+                            <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #F3F4F6", paddingTop: 20, marginTop: "auto" }}>
+                                <span>{item.size}</span>
+                                <div style={{ display: "flex", gap: 10 }}>
+                                    <button style={{ padding: "10px 16px", borderRadius: 6, border: "1px solid #4B5E26", cursor: "pointer", background: "#fff", color: "#4B5E26", fontWeight: 600 }} onClick={() => viewFile(item.file_url)}>
+                                        👁 View
+                                    </button>
+                                    <button style={{ padding: "10px 16px", borderRadius: 6, border: "1px solid #4B5E26", cursor: "pointer", background: "#fff", color: "#4B5E26", fontWeight: 600 }} onClick={() => downloadFile(item.file_url, item.title)}>
+                                        📥 Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ================= PDF Viewer Modal ================= */}
+            {viewUrl && (
+                <div
+                    onClick={closeView}
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,
+                    }}
+                >
+                 <div
+    onClick={(e) => e.stopPropagation()}
+    style={{
+        width: "80%",
+        height: "80%",
+        backgroundColor: "#fff",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+    }}
+>
+    {/* Close Button */}
+    <button
+        onClick={closeView}
+        style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            zIndex: 10, // Ensure it's above the Viewer
+            padding: "5px 10px",
+            cursor: "pointer",
+            background: "#f44336",
+            color: "#fff",
+            border: "none",
+            borderRadius: 4,
+            fontWeight: "bold",
+        }}
+    >
+        ❌ Close
+    </button>
+
+    {/* PDF Viewer */}
+    <div style={{ flex: 1, overflow: "hidden" }}>
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+            <Viewer fileUrl={viewUrl} />
+        </Worker>
+    </div>
+</div>
+
+                </div>
+            )}
+        </div>
+    );
 };
 
-// --- Child Component: ResourceCard ---
-const ResourceCard = ({ type, title, description, size }) => (
-  <div style={styles.card}>
-    <div>
-      <div style={styles.cardHeader}>
-        <div style={styles.iconBox}>📄</div>
-        <span style={styles.typeTag}>{type}</span>
-      </div>
-      <h3 style={styles.cardTitle}>{title}</h3>
-      <p style={styles.cardDesc}>{description}</p>
-    </div>
-    
-    <div style={styles.cardFooter}>
-      <span style={styles.fileInfo}>PDF • {size}</span>
-      <div style={styles.btnGroup}>
-        <button style={styles.actionBtn}>👁 View</button>
-        <button style={{...styles.actionBtn, ...styles.downloadBtn}}>📥 Download</button>
-      </div>
-    </div>
-  </div>
-);
-
-// --- Main Component: AntiLandMafiaResources ---
-export default function ResourcesSection() {
-  const resourceData = [
-    {
-      type: 'Legal Document',
-      title: 'Land Acquisition Act 2013 - Co...',
-      description: 'Comprehensive explanation of the Right to Fair Compensation and Transparency in Land...',
-      size: '2.4 MB'
-    },
-    {
-      type: 'Guide',
-      title: 'How to File RTI for Land Reco...',
-      description: 'Step-by-step guide with sample application format for obtaining land records through RTI.',
-      size: '856 KB'
-    },
-    {
-      type: 'Template',
-      title: 'Sample Legal Notice Format f...',
-      description: 'Ready-to-use legal notice templates for various land dispute scenarios.',
-      size: '1.2 MB'
-    },
-    {
-      type: 'Reference',
-      title: 'State-wise Land Revenue Acts ...',
-      description: 'Compilation of key land revenue laws across different states in simplified language.',
-      size: '3.1 MB'
-    },
-    {
-      type: 'Template',
-      title: 'FIR Template for Land Fraud C...',
-      description: 'Sample FIR formats for reporting land grabbing and document forgery to police.',
-      size: '524 KB'
-    },
-    {
-      type: 'Guide',
-      title: 'Checklist: Verifying Land Doc...',
-      description: 'Essential checklist to verify authenticity of land documents before purchase.',
-      size: '412 KB'
-    }
-  ];
-
-  return (
-    <div style={styles.container}>
-      <div style={styles.headerContent}>
-        <div style={styles.freeBadge}>
-          <span>📄</span> Free Resources
-        </div>
-        <div style={styles.titleRow}>
-          <h1 style={styles.mainTitle}>Legal Resources & Documents</h1>
-          <button style={styles.viewAllBtn}>View All Resources</button>
-        </div>
-        <p style={styles.subtitle}>
-          Download free legal guides, templates, and documents to protect your land rights.
-        </p>
-      </div>
-
-      <div style={styles.grid}>
-        {resourceData.map((item, index) => (
-          <ResourceCard key={index} {...item} />
-        ))}
-      </div>
-    </div>
-  );
-}
+export default ResourcesPage;
