@@ -31,7 +31,7 @@ export default function App() {
              {/* <AboutSection/> */}
              <BlogSection/>
              <ResourcesSection/>
-             <Contact/>
+             {/* <Contact/> */}
             </>
           }
         />
