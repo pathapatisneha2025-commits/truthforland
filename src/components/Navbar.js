@@ -54,7 +54,7 @@ export default function Navbar() {
 
           {/* Right */}
           <div className="right">
-            <span className="search">🔍</span>
+            {/* <span className="search">🔍</span> */}
             <button className="help-btn desktop-only">Get Help</button>
 
             <div
