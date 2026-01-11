@@ -222,22 +222,16 @@ const blogPosts = [
   };
 
   // ========================= FILTERED POSTS =========================
-  const filteredPosts = blogPosts.filter(post => {
-    const textContent = stripHTML(post.content || '');
-    const query = searchQuery.toLowerCase();
+const filteredPosts = blogPosts.filter(post => {
+  const query = searchQuery.toLowerCase();
 
-    // Check category
-    const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+  // Strict search: match only category
+  const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
 
-    // Check search query
-    const matchesSearch = !query ||
-      post.title.toLowerCase().includes(query) ||
-      textContent.toLowerCase().includes(query) ||
-      post.category.toLowerCase().includes(query) ||
-      post.type.toLowerCase().includes(query);
+  const matchesSearch = !query || post.category.toLowerCase().includes(query);
 
-    return matchesCategory && matchesSearch;
-  });
+  return matchesCategory && matchesSearch;
+});
 
   // ========================= HANDLE CATEGORY CLICK =========================
   const handleCategoryClick = (category) => {
