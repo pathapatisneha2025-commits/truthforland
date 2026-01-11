@@ -25,7 +25,7 @@ export default function App() {
           path="/"
           element={
             <>
-             <HeroSection/>
+             {/* <HeroSection/> */}
              {/* <AboutSection/> */}
              <BlogSection/>
              {/* <ResourcesSection/> */}

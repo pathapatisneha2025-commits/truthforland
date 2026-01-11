@@ -3,118 +3,130 @@ import { Link } from "react-router-dom";
 
 const BlogSection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const styles = {
     container: {
-      backgroundColor: '#fdfcf7',
+      backgroundColor: '#ffffff',
       fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#1a1a1a',
-      padding: '80px 5%',
+      padding: '40px 20px',
+      maxWidth: '1200px',
+      margin: '0 auto',
     },
-    centeredHeader: {
+    header: {
       textAlign: 'center',
-      marginBottom: '60px',
+      marginBottom: '30px',
     },
-    badge: {
-      backgroundColor: '#e3e8d8',
-      color: '#4a5d23',
-      padding: '6px 16px',
-      borderRadius: '20px',
-      fontSize: '12px',
-      fontWeight: '600',
+    upperTitle: {
+      color: '#B5A46D',
+      fontSize: '14px',
+      fontWeight: 'bold',
       textTransform: 'uppercase',
-      display: 'inline-block',
-      marginBottom: '15px',
+      letterSpacing: '1px',
+      marginBottom: '10px',
     },
-    serifHeading: {
-      fontFamily: 'serif',
-      fontSize: '42px',
-      margin: '0 0 20px 0',
+    mainHeading: {
+      fontSize: '32px',
+      fontWeight: '700',
+      color: '#2D5A43', // Dark Green from screenshot
+      margin: '0 0 15px 0',
+      lineHeight: '1.2',
     },
     subtext: {
       color: '#666',
-      fontSize: '18px',
-      maxWidth: '700px',
-      margin: '0 auto',
-      lineHeight: '1.6',
+      fontSize: '15px',
+      lineHeight: '1.5',
+      maxWidth: '500px',
+      margin: '0 auto 30px auto',
     },
-    categoryGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '24px',
-      marginBottom: '100px',
-    },
-    catCard: {
-      height: '350px',
-      borderRadius: '20px',
-      position: 'relative',
-      overflow: 'hidden',
+    filterContainer: {
       display: 'flex',
-      justifyContent: 'flex-end',
-      padding: '30px',
+      gap: '10px',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      marginBottom: '40px',
     },
-    overlay: {
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8))',
-    },
-    catContent: {
-      position: 'relative',
-      color: '#fff',
-    },
-    articleCount: {
-      backgroundColor: '#c0841d',
-      padding: '4px 12px',
-      borderRadius: '20px',
-      fontSize: '12px',
-      fontWeight: 'bold',
-      marginBottom: '10px',
-      display: 'inline-block',
-    },
-    searchContainer: {
-      maxWidth: '600px',
-      margin: '0 auto 40px',
-      position: 'relative',
-    },
-    searchInput: {
-      width: '100%',
-      padding: '16px 25px 16px 50px',
-      borderRadius: '40px',
-      border: '1px solid #ddd',
-      fontSize: '16px',
-      outline: 'none',
-    },
+    filterBtn: (isActive) => ({
+      padding: '8px 18px',
+      borderRadius: '25px',
+      border: '1px solid #E0E0E0',
+      backgroundColor: isActive ? '#2D5A43' : '#F9FBF9',
+      color: isActive ? '#fff' : '#666',
+      fontSize: '13px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+    }),
     blogGrid: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '30px',
+      gap: '25px',
     },
-    blogCard: {
-      backgroundColor: '#f5f7f0',
-      borderRadius: '16px',
-      padding: '30px',
-      border: '1px solid #ebede4',
+    card: {
+      backgroundColor: '#fff',
+      borderRadius: '20px',
+      overflow: 'hidden',
+      textDecoration: 'none',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
     },
-    meta: {
+    imageWrapper: {
+      position: 'relative',
+      width: '100%',
+      height: '220px',
+    },
+    cardImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      borderRadius: '15px',
+    },
+    floatingBadge: {
+      position: 'absolute',
+      top: '15px',
+      left: '15px',
+      backgroundColor: '#FFB800',
+      color: '#fff',
+      padding: '4px 12px',
+      borderRadius: '15px',
+      fontSize: '11px',
+      fontWeight: 'bold',
+    },
+    contentArea: {
+      padding: '15px 5px',
+    },
+    metaInfo: {
       display: 'flex',
       gap: '15px',
-      fontSize: '13px',
-      color: '#888',
+      fontSize: '12px',
+      color: '#999',
+      marginBottom: '10px',
+      alignItems: 'center',
+    },
+    cardTitle: {
+      fontSize: '18px',
+      color: '#333',
+      lineHeight: '1.4',
+      margin: '0 0 10px 0',
+      fontWeight: '600',
+    },
+    cardDesc: {
+      fontSize: '14px',
+      color: '#777',
+      lineHeight: '1.5',
       marginBottom: '15px',
     },
+    readMore: {
+      color: '#333',
+      fontWeight: 'bold',
+      fontSize: '14px',
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
   };
 
-  const categories = [
-    { title: 'Land Fraud & Mafia Exposés', count: '24 Articles', img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=600' },
-    { title: 'Legal Awareness & Land Laws', count: '18 Articles', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=600' },
-    { title: 'Victim Voices & Community Support', count: '15 Articles', img: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=600' },
-  ];
+  const categories = ['All', 'Land Rights', 'Investigations', 'Legal', ];
 
-const recentPosts = [
+ const blogPosts = [
   // ================= INVESTIGATIONS =================
   {
     id: 1,
@@ -303,114 +315,55 @@ const recentPosts = [
 ];
 
 
-
-  const filteredPosts = recentPosts.filter(post => {
-    const matchesCategory =
-      activeCategory === 'All' || post.category === activeCategory;
-
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.type.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesCategory && matchesSearch;
-  });
+  const filteredPosts = activeCategory === 'All' 
+    ? blogPosts 
+    : blogPosts.filter(post => post.category === activeCategory);
 
   return (
     <div style={styles.container}>
-      <header style={styles.centeredHeader}>
-        <div style={styles.badge}>Explore Our Categories</div>
-        <h1 style={styles.serifHeading}>Stories That Matter</h1>
+      {/* HEADER SECTION */}
+      <header style={styles.header}>
+        <div style={styles.upperTitle}>Our Blog</div>
+        <h1 style={styles.mainHeading}>Latest News & <br/>Insights</h1>
         <p style={styles.subtext}>
-          Dive into investigations, legal awareness, and community victories.
+          Stay informed about land rights, fraud prevention, and community victories in the fight against land mafia.
         </p>
       </header>
 
-      <div style={styles.categoryGrid}>
-        {categories.map((cat, i) => (
-          <div
-            key={i}
-            style={{
-              ...styles.catCard,
-              backgroundImage: `url(${cat.img})`,
-              backgroundSize: 'cover',
-            }}
-          >
-            <div style={styles.overlay} />
-            <div style={styles.catContent}>
-              <span style={styles.articleCount}>{cat.count}</span>
-              <h3>{cat.title}</h3>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* FILTER CHIPS */}
-      <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '40px' }}>
-        {['All', 'Land Rights', 'Investigations', 'Legal'].map(cat => (
+      {/* FILTER PILLS */}
+      <div style={styles.filterContainer}>
+        {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '20px',
-              border: activeCategory === cat ? 'none' : '1px solid #ddd',
-              background: activeCategory === cat ? '#4a5d23' : '#f5f7f0',
-              color: activeCategory === cat ? '#fff' : '#333',
-              fontWeight: '600',
-              cursor: 'pointer',
-            }}
+            style={styles.filterBtn(activeCategory === cat)}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* SEARCH */}
-      <div style={styles.searchContainer}>
-        <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)' }}>🔍</span>
-        <input
-          type="text"
-          placeholder="Search blogs & resources..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          style={styles.searchInput}
-        />
-      </div>
-
-      {/* BLOG GRID */}
+      {/* BLOG LIST */}
       <div style={styles.blogGrid}>
-        {filteredPosts.map((post, i) => (
-          <div key={i} style={styles.blogCard}>
-              <img
-        src={post.image}
-        alt={post.title}
-        style={{
-          width: '100%',
-          height: '180px',
-          objectFit: 'cover',
-          borderRadius: '12px',
-          marginBottom: '15px',
-        }}
-      />
-            <div>
-              <span style={{ ...styles.badge, backgroundColor: '#eee', color: '#666' }}>
-                {post.type}
-              </span>
-              <h3 style={{ fontFamily: 'serif', margin: '15px 0' }}>
-                {post.title}
-              </h3>
+        {filteredPosts.map((post) => (
+          <div key={post.id} style={styles.card}>
+            <div style={styles.imageWrapper}>
+              <img src={post.image} alt={post.title} style={styles.cardImage} />
+              <div style={styles.floatingBadge}>{post.category}</div>
             </div>
-            <div>
-              <div style={styles.meta}>
-                <span>📅 {post.date}</span>
-                <span>⏱️ {post.read}</span>
+            
+            <div style={styles.contentArea}>
+              <div style={styles.metaInfo}>
+                <span>🗓 {post.date}</span>
+                <span>⏱ {post.read}</span>
               </div>
-              <Link
-  to={`/blogdetailed`}
-  style={{ color: '#4a5d23', fontWeight: 'bold' }}
->
-  Read Full Story →
-</Link>
+              
+              <h3 style={styles.cardTitle}>{post.title}</h3>
+              <p style={styles.cardDesc}>{post.description}</p>
+              
+              <Link to="/blogdetailed" style={styles.readMore}>
+                Read Article ↗
+              </Link>
             </div>
           </div>
         ))}
