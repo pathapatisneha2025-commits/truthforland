@@ -3,130 +3,32 @@ import { Link } from "react-router-dom";
 
 const BlogSection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const styles = {
-    container: {
-      backgroundColor: '#ffffff',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      padding: '40px 20px',
-      maxWidth: '1200px',
-      margin: '0 auto',
-    },
-    header: {
-      textAlign: 'center',
-      marginBottom: '30px',
-    },
-    upperTitle: {
-      color: '#B5A46D',
-      fontSize: '14px',
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      letterSpacing: '1px',
-      marginBottom: '10px',
-    },
-    mainHeading: {
-      fontSize: '32px',
-      fontWeight: '700',
-      color: '#2D5A43', // Dark Green from screenshot
-      margin: '0 0 15px 0',
-      lineHeight: '1.2',
-    },
-    subtext: {
-      color: '#666',
-      fontSize: '15px',
-      lineHeight: '1.5',
-      maxWidth: '500px',
-      margin: '0 auto 30px auto',
-    },
-    filterContainer: {
-      display: 'flex',
-      gap: '10px',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      marginBottom: '40px',
-    },
-    filterBtn: (isActive) => ({
-      padding: '8px 18px',
-      borderRadius: '25px',
-      border: '1px solid #E0E0E0',
-      backgroundColor: isActive ? '#2D5A43' : '#F9FBF9',
-      color: isActive ? '#fff' : '#666',
-      fontSize: '13px',
-      fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-    }),
-    blogGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '25px',
-    },
-    card: {
-      backgroundColor: '#fff',
-      borderRadius: '20px',
-      overflow: 'hidden',
-      textDecoration: 'none',
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    imageWrapper: {
-      position: 'relative',
-      width: '100%',
-      height: '220px',
-    },
-    cardImage: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      borderRadius: '15px',
-    },
-    floatingBadge: {
-      position: 'absolute',
-      top: '15px',
-      left: '15px',
-      backgroundColor: '#FFB800',
-      color: '#fff',
-      padding: '4px 12px',
-      borderRadius: '15px',
-      fontSize: '11px',
-      fontWeight: 'bold',
-    },
-    contentArea: {
-      padding: '15px 5px',
-    },
-    metaInfo: {
-      display: 'flex',
-      gap: '15px',
-      fontSize: '12px',
-      color: '#999',
-      marginBottom: '10px',
-      alignItems: 'center',
-    },
-    cardTitle: {
-      fontSize: '18px',
-      color: '#333',
-      lineHeight: '1.4',
-      margin: '0 0 10px 0',
-      fontWeight: '600',
-    },
-    cardDesc: {
-      fontSize: '14px',
-      color: '#777',
-      lineHeight: '1.5',
-      marginBottom: '15px',
-    },
-    readMore: {
-      color: '#333',
-      fontWeight: 'bold',
-      fontSize: '14px',
-      textDecoration: 'underline',
-      cursor: 'pointer'
-    }
+    container: { backgroundColor: '#ffffff', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' },
+    header: { textAlign: 'center', marginBottom: '30px' },
+    upperTitle: { color: '#B5A46D', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' },
+    mainHeading: { fontSize: '32px', fontWeight: '700', color: '#2D5A43', margin: '0 0 15px 0', lineHeight: '1.2' },
+    subtext: { color: '#666', fontSize: '15px', lineHeight: '1.5', maxWidth: '500px', margin: '0 auto 30px auto' },
+    filterContainer: { display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' },
+    filterBtn: (isActive) => ({ padding: '8px 18px', borderRadius: '25px', border: '1px solid #E0E0E0', backgroundColor: isActive ? '#2D5A43' : '#F9FBF9', color: isActive ? '#fff' : '#666', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.3s ease' }),
+    searchBar: { display: 'block', width: '100%', maxWidth: '400px', margin: '0 auto 30px auto', padding: '10px 15px', fontSize: '14px', borderRadius: '25px', border: '1px solid #ccc', outline: 'none' },
+    blogGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '25px' },
+    card: { backgroundColor: '#fff', borderRadius: '20px', overflow: 'hidden', textDecoration: 'none', display: 'flex', flexDirection: 'column' },
+    imageWrapper: { position: 'relative', width: '100%', height: '220px' },
+    cardImage: { width: '100%', height: '100%', objectFit: 'cover', borderRadius: '15px' },
+    floatingBadge: { position: 'absolute', top: '15px', left: '15px', backgroundColor: '#FFB800', color: '#fff', padding: '4px 12px', borderRadius: '15px', fontSize: '11px', fontWeight: 'bold' },
+    contentArea: { padding: '15px 5px' },
+    metaInfo: { display: 'flex', gap: '15px', fontSize: '12px', color: '#999', marginBottom: '10px', alignItems: 'center' },
+    cardTitle: { fontSize: '18px', color: '#333', lineHeight: '1.4', margin: '0 0 10px 0', fontWeight: '600' },
+    cardDesc: { fontSize: '14px', color: '#777', lineHeight: '1.5', marginBottom: '15px' },
+    readMore: { color: '#333', fontWeight: 'bold', fontSize: '14px', textDecoration: 'underline', cursor: 'pointer' }
   };
 
-  const categories = ['All', 'Land Rights', 'Investigations', 'Legal', ];
+  const categories = ['All', 'Land Rights', 'Investigations', 'Legal', 'Community'];
 
- const blogPosts = [
+const blogPosts = [
   // ================= INVESTIGATIONS =================
   {
     id: 1,
@@ -313,18 +215,42 @@ const BlogSection = () => {
     `,
   },
 ];
+  const stripHTML = (html) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
 
+  // ========================= FILTERED POSTS =========================
+  const filteredPosts = blogPosts.filter(post => {
+    const textContent = stripHTML(post.content || '');
+    const query = searchQuery.toLowerCase();
 
-  const filteredPosts = activeCategory === 'All' 
-    ? blogPosts 
-    : blogPosts.filter(post => post.category === activeCategory);
+    // Check category
+    const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+
+    // Check search query
+    const matchesSearch = !query ||
+      post.title.toLowerCase().includes(query) ||
+      textContent.toLowerCase().includes(query) ||
+      post.category.toLowerCase().includes(query) ||
+      post.type.toLowerCase().includes(query);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  // ========================= HANDLE CATEGORY CLICK =========================
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+    setSearchQuery(''); // Clear search when category changes
+  };
 
   return (
     <div style={styles.container}>
-      {/* HEADER SECTION */}
+      {/* HEADER */}
       <header style={styles.header}>
         <div style={styles.upperTitle}>Our Blog</div>
-        <h1 style={styles.mainHeading}>Latest News & <br/>Insights</h1>
+        <h1 style={styles.mainHeading}>Latest News & <br />Insights</h1>
         <p style={styles.subtext}>
           Stay informed about land rights, fraud prevention, and community victories in the fight against land mafia.
         </p>
@@ -335,7 +261,7 @@ const BlogSection = () => {
         {categories.map(cat => (
           <button
             key={cat}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => handleCategoryClick(cat)}
             style={styles.filterBtn(activeCategory === cat)}
           >
             {cat}
@@ -343,24 +269,30 @@ const BlogSection = () => {
         ))}
       </div>
 
-      {/* BLOG LIST */}
+      {/* SEARCH BAR */}
+      <input
+        type="text"
+        placeholder="Search blogs..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={styles.searchBar}
+      />
+
+      {/* BLOG GRID */}
       <div style={styles.blogGrid}>
-        {filteredPosts.map((post) => (
+        {filteredPosts.map(post => (
           <div key={post.id} style={styles.card}>
             <div style={styles.imageWrapper}>
               <img src={post.image} alt={post.title} style={styles.cardImage} />
               <div style={styles.floatingBadge}>{post.category}</div>
             </div>
-            
             <div style={styles.contentArea}>
               <div style={styles.metaInfo}>
                 <span>🗓 {post.date}</span>
                 <span>⏱ {post.read}</span>
               </div>
-              
               <h3 style={styles.cardTitle}>{post.title}</h3>
               <p style={styles.cardDesc}>{post.description}</p>
-              
               <Link to="/blogdetailed" style={styles.readMore}>
                 Read Article ↗
               </Link>
