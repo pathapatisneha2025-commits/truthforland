@@ -16,7 +16,7 @@ export default function Navbar() {
           
           {/* Left: Logo + Text */}
           <div className="brand">
-            <img src="/companylogo.png" alt="Anti Land Mafia" />
+            <img src="/lanlogo.jpeg" alt="Anti Land Mafia" />
             <div className="brand-text">
               <h3>Anti Land Mafia</h3>
               <p>Justice for Land Rights</p>

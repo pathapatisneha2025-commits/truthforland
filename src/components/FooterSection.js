@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="footer-brand">
           <div className="brand-logo">
             <div className="logo-placeholder">
-              <img src="/companylogo.png" alt="Anti Land Mafia Logo" />
+              <img src="/lanlogo.jpeg" alt="Anti Land Mafia Logo" />
             </div>
             <div>
               <h3>Anti Land Mafia</h3>
@@ -53,8 +53,11 @@ const Footer = () => {
           <h4>Contact Us</h4>
           <div className="contact-info">
             <p><span>✉️</span> contact@antilandmafia.org</p>
-            <p><span>📞</span> +91 98765 43210</p>
-            <p><span>📍</span> New Delhi, India</p>
+            <p><span>📞</span> +91 8014447744</p>
+            <p><span>📍</span> 44-412/12/1
+Thirmalanagar
+Sapthagiri colony
+Street num 1,Beside zts,Moulali,Hyderabad</p>
           </div>
           <div className="social-links">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebookF /></a>
