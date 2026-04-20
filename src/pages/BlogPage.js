@@ -1,9 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from "react-router-dom";
 
 const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const BASE_URL = "https://truthforlanddatabase.onrender.com/blogs";
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${BASE_URL}/all`);
+        const data = await res.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // ✅ BUILD CATEGORIES FROM API (AUTO COUNT)
+  const categories = useMemo(() => {
+    const map = {};
+
+    posts.forEach(post => {
+      const cat = post.category || "Uncategorized";
+
+      if (!map[cat]) {
+        map[cat] = {
+          title: cat,
+          count: 0,
+          img: post.image_url || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=600",
+        };
+      }
+
+      map[cat].count += 1;
+    });
+
+    return Object.values(map);
+  }, [posts]);
 
   const styles = {
     container: {
@@ -108,209 +150,14 @@ const BlogPage = () => {
     },
   };
 
-  const categories = [
-    { title: 'Land Fraud & Mafia Exposés', count: '24 Articles', img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=600' },
-    { title: 'Legal Awareness & Land Laws', count: '18 Articles', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=600' },
-    { title: 'Victim Voices & Community Support', count: '15 Articles', img: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=600' },
-  ];
-
-const recentPosts = [
-  // ================= INVESTIGATIONS =================
-  {
-    id: 1,
-    category: 'Investigations',
-    type: 'Investigations',
-    title: 'Community Victory: How Villages United Against Land Mafia',
-    slug: 'community-victory-against-land-mafia',
-    date: 'Jan 3, 2025',
-    read: '6 min read',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800',
-    content: `
-      <p>For years, multiple villages suffered under illegal land grabbing.</p>
-      <p>Through unity, legal awareness, and collective resistance, they reclaimed their land.</p>
-      <h3>How They Won</h3>
-      <ul>
-        <li>Organized community meetings</li>
-        <li>Verified land records</li>
-        <li>Filed coordinated legal cases</li>
-      </ul>
-    `,
-  },
-  {
-    id: 2,
-    category: 'Investigations',
-    type: 'Investigations',
-    title: 'Inside the Land Scam Network Operating Across Three Districts',
-    slug: 'inside-land-scam-network',
-    date: 'Jan 1, 2025',
-    read: '8 min read',
-    image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800',
-    content: `
-      <p>This investigation exposes how land scam networks operate across districts.</p>
-      <p>Fake documents, political influence, and intimidation tactics are commonly used.</p>
-    `,
-  },
-  {
-    id: 3,
-    category: 'Investigations',
-    type: 'Investigations',
-    title: 'Fake Power of Attorney: The Silent Weapon Used by Land Mafia',
-    slug: 'fake-power-of-attorney-land-mafia',
-    date: 'Dec 26, 2024',
-    read: '7 min read',
-    image: 'https://images.unsplash.com/photo-1516542076529-1ea3854896f2?q=80&w=800',
-    content: `
-      <p>Fake Power of Attorney documents are a silent but powerful tool.</p>
-      <p>This article explains how they work and how to detect them early.</p>
-    `,
-  },
-
-  // ================= LEGAL =================
-  {
-    id: 4,
-    category: 'Legal',
-    type: 'Legal',
-    title: 'Understanding Property Documentation: Protect Your Land',
-    slug: 'understanding-property-documentation',
-    date: 'Dec 28, 2024',
-    read: '8 min read',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=800',
-    content: `
-      <p>Property documents are your first line of defense.</p>
-      <p>This guide explains sale deeds, patta, RTC, and encumbrance certificates.</p>
-    `,
-  },
-  {
-    id: 5,
-    category: 'Legal',
-    type: 'Legal',
-    title: 'Step-by-Step Guide to Filing a Land Dispute Case in Court',
-    slug: 'filing-land-dispute-case-guide',
-    date: 'Dec 21, 2024',
-    read: '5 min read',
-    image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800',
-    content: `
-      <p>Filing a land dispute can be overwhelming.</p>
-      <ol>
-        <li>Collect documents</li>
-        <li>Consult a lawyer</li>
-        <li>File the case in civil court</li>
-      </ol>
-    `,
-  },
-  {
-    id: 6,
-    category: 'Legal',
-    type: 'Legal',
-    title: 'Difference Between Patta, RTC, and Sale Deed Explained',
-    slug: 'patta-rtc-sale-deed-difference',
-    date: 'Dec 15, 2024',
-    read: '6 min read',
-    image: 'https://images.unsplash.com/photo-1555375771-14b2a63968a9?q=80&w=800',
-    content: `
-      <p>Many landowners confuse these documents.</p>
-      <p>This article clearly explains their purpose and importance.</p>
-    `,
-  },
-
-  // ================= COMMUNITY =================
-  {
-    id: 7,
-    category: 'Community',
-    type: 'Community',
-    title: 'Victory: Community Wins Back 100 Acres After 5-Year Battle',
-    slug: 'community-wins-back-100-acres',
-    date: 'Dec 22, 2024',
-    read: '6 min read',
-    image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800',
-    content: `
-      <p>After five years of struggle, justice prevailed.</p>
-      <p>This story shows how persistence can reclaim stolen land.</p>
-    `,
-  },
-  {
-    id: 8,
-    category: 'Community',
-    type: 'Community',
-    title: 'How Local Youth Groups Helped Save Ancestral Farmland',
-    slug: 'youth-groups-save-ancestral-farmland',
-    date: 'Dec 18, 2024',
-    read: '4 min read',
-    image: 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=800',
-    content: `
-      <p>Youth volunteers played a key role in protecting farmland.</p>
-      <p>Awareness campaigns and record verification made the difference.</p>
-    `,
-  },
-  {
-    id: 9,
-    category: 'Community',
-    type: 'Community',
-    title: 'From Fear to Freedom: A Village’s Fight Against Illegal Occupation',
-    slug: 'village-fight-against-illegal-occupation',
-    date: 'Dec 10, 2024',
-    read: '7 min read',
-    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=600',
-    content: `
-      <p>This village transformed fear into collective action.</p>
-      <p>Legal literacy empowered residents to reclaim their rights.</p>
-    `,
-  },
-
-  // ================= LAND RIGHTS =================
-  {
-    id: 10,
-    category: 'Land Rights',
-    type: 'Land Rights',
-    title: 'Know Your Land Rights: What Every Property Owner Must Check',
-    slug: 'know-your-land-rights',
-    date: 'Jan 5, 2025',
-    read: '5 min read',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800',
-    content: `
-      <p>Every landowner must understand their legal rights.</p>
-      <p>This article explains ownership verification and legal safeguards.</p>
-    `,
-  },
-  {
-    id: 11,
-    category: 'Land Rights',
-    type: 'Land Rights',
-    title: 'Common Tricks Used to Grab Government and Temple Lands',
-    slug: 'tricks-used-to-grab-government-land',
-    date: 'Dec 29, 2024',
-    read: '6 min read',
-    image: 'https://images.unsplash.com/photo-1496247749665-49cf5b1022e9?q=80&w=800',
-    content: `
-      <p>Government and temple lands are frequent targets.</p>
-      <p>Learn the most common fraud techniques and how to prevent them.</p>
-    `,
-  },
-  {
-    id: 12,
-    category: 'Land Rights',
-    type: 'Land Rights',
-    title: 'How to Verify Land Records Before Buying Property',
-    slug: 'verify-land-records-before-buying',
-    date: 'Dec 14, 2024',
-    read: '5 min read',
-    image: 'https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=800',
-    content: `
-      <p>Verification is the most important step before buying land.</p>
-      <p>This guide walks you through official portals and documents.</p>
-    `,
-  },
-];
-
-
-
-  const filteredPosts = recentPosts.filter(post => {
+  // ✅ FILTER POSTS
+  const filteredPosts = posts.filter(post => {
     const matchesCategory =
       activeCategory === 'All' || post.category === activeCategory;
 
     const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.type.toLowerCase().includes(searchQuery.toLowerCase());
+      (post.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (post.type || '').toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesCategory && matchesSearch;
   });
@@ -325,28 +172,33 @@ const recentPosts = [
         </p>
       </header>
 
+      {/* CATEGORY CARDS (FROM API) */}
       <div style={styles.categoryGrid}>
         {categories.map((cat, i) => (
           <div
             key={i}
+            onClick={() => setActiveCategory(cat.title)}
             style={{
               ...styles.catCard,
               backgroundImage: `url(${cat.img})`,
               backgroundSize: 'cover',
+              cursor: 'pointer',
             }}
           >
             <div style={styles.overlay} />
             <div style={styles.catContent}>
-              <span style={styles.articleCount}>{cat.count}</span>
+              <span style={styles.articleCount}>
+                {cat.count} Articles
+              </span>
               <h3>{cat.title}</h3>
             </div>
           </div>
         ))}
       </div>
 
-      {/* FILTER CHIPS */}
+      {/* FILTER BUTTONS */}
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '40px' }}>
-        {['All', 'Land Rights', 'Investigations', 'Legal'].map(cat => (
+        {['All', ...categories.map(c => c.title)].map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -378,43 +230,48 @@ const recentPosts = [
       </div>
 
       {/* BLOG GRID */}
-      <div style={styles.blogGrid}>
-        {filteredPosts.map((post, i) => (
-          <div key={i} style={styles.blogCard}>
+      {loading ? (
+        <p style={{ textAlign: 'center' }}>Loading blogs...</p>
+      ) : (
+        <div style={styles.blogGrid}>
+          {filteredPosts.map((post, i) => (
+            <div key={i} style={styles.blogCard}>
               <img
-        src={post.image}
-        alt={post.title}
-        style={{
-          width: '100%',
-          height: '180px',
-          objectFit: 'cover',
-          borderRadius: '12px',
-          marginBottom: '15px',
-        }}
-      />
-            <div>
-              <span style={{ ...styles.badge, backgroundColor: '#eee', color: '#666' }}>
-                {post.type}
-              </span>
-              <h3 style={{ fontFamily: 'serif', margin: '15px 0' }}>
-                {post.title}
-              </h3>
-            </div>
-            <div>
-              <div style={styles.meta}>
-                <span>📅 {post.date}</span>
-                <span>⏱️ {post.read}</span>
+                src={post.image_url}
+                alt={post.title}
+                style={{
+                  width: '100%',
+                  height: '180px',
+                  objectFit: 'cover',
+                  borderRadius: '12px',
+                  marginBottom: '15px',
+                }}
+              />
+
+              <div>
+                <span style={{ ...styles.badge, backgroundColor: '#eee', color: '#666' }}>
+                  {post.type}
+                </span>
+
+                <h3 style={{ fontFamily: 'serif', margin: '15px 0' }}>
+                  {post.title}
+                </h3>
               </div>
-              <Link
-  to={`/blogdetailed`}
-  style={{ color: '#4a5d23', fontWeight: 'bold' }}
->
+
+              <div>
+                <div style={styles.meta}>
+                  <span>📅 {post.date}</span>
+                  <span>⏱️ {post.read_time}</span>
+                </div>
+
+              <Link to={`/blog/${post.id}`}>
   Read Full Story →
 </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

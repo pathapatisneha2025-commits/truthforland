@@ -1,8 +1,32 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const BlogDetailPage = ({ blog }) => {
-      const navigate = useNavigate();
+const BlogDetailPage = () => {
+  const navigate = useNavigate();
+  const { id } = useParams(); // dynamic blog id
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        setLoading(true);
+
+        const res = await fetch(
+          `https://truthforlanddatabase.onrender.com/blogs/${id}`
+        );
+        const data = await res.json();
+
+        setBlog(data);
+      } catch (err) {
+        console.error("Error fetching blog:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
 
   const styles = {
     container: {
@@ -49,11 +73,6 @@ const BlogDetailPage = ({ blog }) => {
       fontSize: "14px",
       marginBottom: "40px",
     },
-    sectionTitle: {
-      fontFamily: "serif",
-      fontSize: "28px",
-      margin: "45px 0 15px",
-    },
     paragraph: {
       fontSize: "18px",
       marginBottom: "22px",
@@ -67,15 +86,38 @@ const BlogDetailPage = ({ blog }) => {
       margin: "40px 0",
       fontSize: "18px",
     },
+    sectionTitle: {
+      fontFamily: "serif",
+      fontSize: "28px",
+      margin: "45px 0 15px",
+    },
     divider: {
       height: "1px",
       backgroundColor: "#e5e7db",
       margin: "60px 0",
     },
   };
+
   const onBack = () => {
-    navigate("/"); // replace "/" with your home/blogs route if different
+    navigate("/blogs");
   };
+
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <p>Loading blog...</p>
+      </div>
+    );
+  }
+
+  if (!blog) {
+    return (
+      <div style={styles.container}>
+        <p>Blog not found</p>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.container}>
       <button onClick={onBack} style={styles.backBtn}>
@@ -83,84 +125,47 @@ const BlogDetailPage = ({ blog }) => {
       </button>
 
       <img
-        src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1400"
-        alt="Land Investigation"
+        src={blog.image_url}
+        alt={blog.title}
         style={styles.heroImage}
       />
 
-      <span style={styles.badge}>Investigations</span>
+      <span style={styles.badge}>{blog.category}</span>
 
-      <h1 style={styles.title}>
-        Fake Power of Attorney: The Silent Weapon Used by Land Mafia
-      </h1>
+      <h1 style={styles.title}>{blog.title}</h1>
 
       <div style={styles.meta}>
-        📅 Dec 26, 2024 &nbsp; | &nbsp; ⏱️ 7 min read &nbsp; | &nbsp; ✍️ Truth For Land
+        📅 {blog.date} &nbsp; | &nbsp; ⏱️ {blog.read_time}
       </div>
 
-      <p style={styles.paragraph}>
-        Across India, thousands of landowners lose their property every year without
-        ever selling it. The weapon used is rarely violence — instead, it is forged
-        paperwork, fake witnesses, and a powerful legal loophole known as the
-        <strong> Power of Attorney</strong>.
-      </p>
+      {/* MAIN DESCRIPTION */}
+      <p style={styles.paragraph}>{blog.main_description}</p>
 
-      <p style={styles.paragraph}>
-        Land mafias identify vulnerable properties — ancestral lands, absentee owners,
-        senior citizens, or disputed plots — and quietly initiate document manipulation.
-        By the time the real owner becomes aware, the land has already changed hands
-        multiple times.
-      </p>
+      {/* CONTENT SECTIONS */}
+      {blog.content_sections?.map((sec, index) => (
+        <div key={index}>
+          {sec.sectionTitle && (
+            <h2 style={styles.sectionTitle}>{sec.sectionTitle}</h2>
+          )}
 
-      <div style={styles.highlight}>
-        ⚠️ <strong>Key Insight:</strong> Most victims discover the fraud only when they
-        attempt to sell, build, or verify records — often years later.
-      </div>
+          {sec.highlight && (
+            <div style={styles.highlight}>
+              <div
+                dangerouslySetInnerHTML={{ __html: sec.highlight }}
+              />
+            </div>
+          )}
 
-      <h2 style={styles.sectionTitle}>How the Scam Operates</h2>
-
-      <p style={styles.paragraph}>
-        The process usually begins with forged identity proofs and fabricated Power of
-        Attorney documents. These documents are registered with the help of corrupt
-        intermediaries, allowing criminals to legally sell land they do not own.
-      </p>
-
-      <p style={styles.paragraph}>
-        Once sold, the property is rapidly resold to multiple buyers, creating layers
-        of ownership that make legal recovery extremely complex.
-      </p>
-
-      <h2 style={styles.sectionTitle}>Why Victims Struggle to Fight Back</h2>
-
-      <p style={styles.paragraph}>
-        Court cases related to land disputes often run for years. During this time,
-        victims face financial pressure, intimidation, and emotional distress. Many
-        are forced to abandon the fight entirely.
-      </p>
-
-      <p style={styles.paragraph}>
-        Legal loopholes, slow investigations, and lack of awareness enable land mafias
-        to operate almost openly in some regions.
-      </p>
-
-      <h2 style={styles.sectionTitle}>How You Can Protect Your Property</h2>
-
-      <p style={styles.paragraph}>
-        Regularly verify land records, avoid signing blank documents, and ensure all
-        transactions are legally vetted. Digital land records and biometric
-        registrations are improving transparency — but vigilance remains essential.
-      </p>
-
-      <div style={styles.highlight}>
-        ✅ <strong>Prevention Tip:</strong> Always cross-check registration details and
-        immediately challenge unauthorized entries in land records.
-      </div>
+          {sec.paragraph && (
+            <p style={styles.paragraph}>{sec.paragraph}</p>
+          )}
+        </div>
+      ))}
 
       <div style={styles.divider} />
 
       <p style={{ fontStyle: "italic", color: "#666" }}>
-        This article is part of our ongoing investigation into land fraud, legal
-        loopholes, and property rights. Awareness is the first step toward justice.
+        {blog.divider}
       </p>
     </div>
   );

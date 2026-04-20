@@ -37,8 +37,7 @@ export default function App() {
         OTHER PAGES
         <Route path="/about" element={<AboutPage/>} />
         <Route path="/blog" element={<BlogPage/>} />
-        <Route path="/blogdetailed" element={<BlogDetailPage />} />
-
+<Route path="/blog/:id" element={<BlogDetailPage />} />
         <Route path="/resource" element={<ResourcesPage />} />
                 <Route path="/contact" element={<ContactPage />} />
 
